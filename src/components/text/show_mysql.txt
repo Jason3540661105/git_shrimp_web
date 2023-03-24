@@ -1,0 +1,147 @@
+import React,{useState, useEffect} from 'react'
+import Axios from "axios";
+import { Link } from "react-router-dom";
+import { Button, IconButton, ButtonGroup, ButtonToolbar } from 'rsuite';
+import Contral from './contral'; //匯入contral檔案
+import Add_mysql from "./add_mysql";
+import { List } from 'rsuite';
+import './css/rsuite_styles.css';
+import './css/show_mysql.css';
+//import "./css/show_sql.css";
+
+
+
+function Show_mysql() {
+
+    const [id , setId] = useState(0);
+    const [name , setName] = useState('');
+    const [time , setTime] = useState(0);
+    const [counts , setCounts] = useState(0);
+    const [record_table, setRecord_table] = useState([]);   //都是存放table資料的數據
+    const [record_table2, setRecord_table2] = useState([]); //都是存放table資料的數據
+    const [sum , setSum] = useState(''); //蝦苗總數
+
+
+
+    /**add_record_db 代表的是與server中index.js檔中/create做連線
+     * 並透過server上傳網頁的資料到MySQL中*/
+    const add_record_db = () => {
+        //post就是上傳資料到mysql: shrimp_database中的record_table
+        Axios.post('http://localhost:3001/create',{ 
+            id:id,              /**對應 id = req.body.id;*/
+            name:name,          /**對應 name = req.body.name;*/
+            time:time,          /**對應 time = req.body.time;*/
+            counts:counts       /**對應 counts = req.body.counts;*/
+        }).then(()=>{
+            console.log('Success');
+        });
+        console.log(id+name+time+counts);
+    };
+
+    /**show_record_db 代表的是與server中index.js檔中/create做連線
+     * 並透過server讀取MySQL的資料到網頁中*/
+    const show_record_db = () =>{
+        //get就是接收mysql: shrimp_database中record_table的資料
+        Axios.get("http://localhost:3001/record_table").then((response)=>{
+            setRecord_table(response.data);
+            console.log('response');
+        });
+    }
+
+    /** 透過useEffect不斷的與server中index.js檔中/create做連線
+    * 並透過server讀取MySQL的資料到網頁中*/
+    useEffect(() =>{
+        const fetchAlldata = async()=>{
+            try{
+                const response = await Axios.get("http://localhost:3001/record_table");
+                setRecord_table2(response.data);
+            }catch(err){
+                console.log(err);
+            }
+        }
+        fetchAlldata();
+    },[]);
+    //Sum的數值出不來，按低一下還會沒數值
+    const show_sum = ()=>{
+        Axios.get("http://localhost:3001/sum").then((response)=>{
+            setSum(response.data);
+            console.log('summm');
+        });
+    }
+
+
+
+  return (
+    <div className='app'>
+
+        <ButtonGroup style={{marginTop: 12}}  justified>
+            <Button appearance={'primary'} onClick = {show_record_db}>Show_Data</Button>
+            <Button appearance={'primary'} onClick = {show_record_db}>Refresh_Data</Button>
+            <Button appearance={'primary'} onClick = {show_sum}>Sum_Counts</Button>
+        </ButtonGroup>
+
+        <h3> Sum is : {sum.data}</h3>
+
+        <div className='show_db'>
+            <List>
+                <br/><br/>
+                {record_table.map((data,key) =>{
+                    return <div className='table_data' key={data.id}>
+                        {data.cover && <img src = {data.cover} alt = "" />}
+                        <h4>ID : {data.id}</h4>
+                        <h4>Name : {data.name}</h4>
+                        <h4>Time : {data.time}</h4>
+                        <h4>Counts : {data.counts}</h4>
+                    </div>
+                })}
+            </List>
+            <br/>
+        </div>
+
+
+        <div className='go_btn'>
+            <Button className='go_home' appearance={'primary'}>
+                <Link to="/home" style={{color: "inherit", textDecoration: "none"}}>
+                    Go to HomePage
+                </Link>
+            </Button>
+            <Button className='go_add' appearance={'primary'} >
+                <Link to="/add" style={{color: "inherit", textDecoration: "none"}}>
+                    Go to Add Page
+                </Link>
+            </Button>
+        </div>
+
+    </div>
+  )
+}
+export default Show_mysql;
+
+/**這邊是輸入[id, name, time, counts]、[Add按鈕]的程式 要使用可以貼上到return裡面
+ *  <Button appearance={'primary'} onClick={add_record_db}>Add_Data</Button>
+ * 
+    <div className='head'>
+        <List>
+            <div className='d_input'>
+                <label>ID</label>
+                    <input type="text" onChange={(id)=>{
+                        setId(id.target.value);
+                    }}/>
+                <label>Name</label>
+                    <input type="text" onChange={(name)=>{
+                        setName(name.target.value);
+                    }}/>
+                <label>Time</label>
+                    <input type="text" onChange={(time)=>{
+                        setTime(time.target.value);
+                    }}/>
+                
+                <label>Counts</label>
+                    <input type="text" onChange={(counts)=>{
+                        setCounts(counts.target.value);
+                    }}/>
+
+            </div>
+        </List>
+    </div>
+*/

@@ -1,0 +1,12 @@
+.show_sum {
+  text-align: center;
+  background-color: #cbcbcb;
+  width: auto;
+}
+.sum_data{
+  font-size: large;
+}
+
+.search_reset{
+    display: flex;
+}
