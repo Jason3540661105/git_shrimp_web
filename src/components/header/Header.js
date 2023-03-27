@@ -12,10 +12,6 @@ const Header = () => {
   const [size, setSize] = useState({
     width: undefined, 
     height: undefined,
-    //這部分讓長寬數值默認300
-    //防止使用menu到下個頁面，視窗依舊 [size.width < 768] = false 導致卡住
-    //width: 300,
-    //height: 300,
   });
 
   useEffect(() => {

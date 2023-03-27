@@ -1,6 +1,7 @@
 //
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
+//import cors from "cors";
 
 //外加conpoments
 import Header from "../components/header/Header.js";
@@ -16,9 +17,9 @@ import {
 import "../Css/show_record_page.css";
 
 //API路由用url代替
-//var url = 'http://192.168.1.106:8801'; //租屋處
+var url = 'http://192.168.1.106:8801';   //租屋處
 //var url = 'http://192.168.0.112:8801'; //學校處
-var url = 'http://localhost:8801';
+//var url = 'http://localhost:8801';
 
 const Show_record_page = () => {
   const [recordData, setRecordData] = useState([]); //存放shrimp_table所有的資料的數據
@@ -39,6 +40,7 @@ const Show_record_page = () => {
       try {
         const response = await Axios.get(
           url+"/api/record_table"
+          //"http://43.207.183.96/imgUpload/?fid"
         );
         //這邊用respone.data是為了下方record_table2.map((data, key)使用
         setRecordData(response.data); //存放mysql端蝦苗計數的資料
@@ -67,7 +69,8 @@ const Show_record_page = () => {
   //透過更新資料按鈕刷新改變後的資料
   const resetData = () => {
     //get就是接收mysql: shrimp_database中record_table的資料
-    Axios.get(url+"/api/record_table").then((response) => {
+    //Axios.get(url+"/api/record_table").then((response) => {
+    Axios.get("http://43.207.183.96/imgUpload/?fid").then((response) => {
       setRecordData(response.data);
       console.log("response");
       console.log(recordData);
