@@ -74,6 +74,8 @@ const Show_record_page = () => {
       setRecordData(response.data);
       console.log("response");
       console.log(recordData);
+    }).catch((error)=>{
+      console.log(error);
     });
   };
   //透過delete按鈕刪除record_table一項表格的紀錄
