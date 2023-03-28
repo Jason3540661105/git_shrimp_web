@@ -70,7 +70,7 @@ const Show_record_page = () => {
   const resetData = () => {
     //get就是接收mysql: shrimp_database中record_table的資料
     //Axios.get(url+"/api/record_table").then((response) => {
-    Axios.get("http://43.207.183.96/imgUpload/?fid").then((response) => {
+    Axios.get("https://43.207.183.96/imgUpload/?fid").then((response) => {
       setRecordData(response.data);
       console.log("response");
       console.log(recordData);
